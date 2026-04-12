@@ -1,0 +1,14 @@
+name: CI
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile
+        run: g++ -o multiplex main.cpp -std=c++11
+      - name: Smoke test (menu loads without crash)
+        run: echo "4" | timeout 5 ./multiplex | head -20
